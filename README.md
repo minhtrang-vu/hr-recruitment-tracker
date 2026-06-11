@@ -339,17 +339,3 @@ Sincerely, **The HR Team**
 | Rules & Constraints |
 | :---- |
 | \*\*R7.1\*\* \*\*Strict Scope Enforce\*\*: The Mailing Cycle screen only processes jobs that have been manually closed. Active "Open" jobs are completely excluded from the navigation view. \*\*R7.2\*\* \*\*Catch-All Rejection Treatment\*\*: There is only one template allocated for this module: the Rejection Template. Any application processed through this screen that is not in a terminal state (e.g., currently in Screening, Interview, or Assessment) will be automatically forced into the terminal "Rejected" stage in the database before the email dispatch loop runs. \*\*R7.3\*\* \*\*Resend API Integration\*\*: All bulk email operations must route strictly through the Resend API service endpoint. To maintain security, the application must provide an "API Key Configuration" settings panel interface on the UI (similar to the Groq API Key input panel) allowing users to input their personal Resend API Key. The system will store this key exclusively in the browser's \`localStorage\` and read it dynamically before firing the email dispatch loop. The "Send Batch Email" button remains disabled until a valid Resend key is detected in local storage. \*\*R7.4\*\* \*\*Idempotency Guard\*\*: To prevent sending duplicate emails to a candidate for the same closed job cycle, any application document where \`batchEmailLogs.rejectedNotificationSent \=== true\` will have its row checkbox disabled and automatically unchecked by default when the data table loads. \*\*R7.5\*\* \*\*Batch Rate Limiting\*\*: The client-side execution loop utilizing the Resend API must employ an asynchronous batch throttle pattern (\`Promise.allSettled\`) capped at a maximum ceiling of 50 concurrent requests per dispatch wave to safeguard API credit quotas.  \*\*R7.6\*\* \*\*Completed Job Visibility Filter\*\*: To ensure a clean workspace, a closed job is programmatically defined as "Mailing Completed" and hidden from the default list view as soon as there are zero applications left matching the condition \`batchEmailLogs.rejectedNotificationSent \=== false\` (excluding Offered/Hired states). However, the system must retain strict relational data availability; if a recruiter inputs the exact alphanumeric \`jobId\` into the search bar, the system must force-render that specific closed job and display its historical recipient table in a read-only state. || |
-
-**8\. What are the "nice to have" features? (not in v1)**
-
-The following are explicitly out of scope for version 1\. All features below target v2 or v3.
-
-| v2 | Discord notifications — alert recruiters when a candidate is moved or an interviewer submits feedback. |
-| :---: | :---- |
-| **v2** | Role-based access — separate views for Recruiter vs Interviewer so interviewers only see the feedback form, not the full pipeline. |
-| **v2** | CV file upload — attach and preview actual PDF résumés instead of storing just a link. |
-| **v2** | Offer letter generator — AI-generated offer letter pre-filled with candidate name, job title, and package details. |
-| **v3** | Advanced analytics — time-to-hire metrics, source tracking, drop-off rates per stage, exportable CSV/PDF reports. |
-| **v3** | Calendar integration — schedule interviews directly from the pipeline board and sync with Google Calendar. |
-
-HR Recruitment Tracker  ·  Planning Document  ·  v1.0  
